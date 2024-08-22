@@ -127,6 +127,7 @@ enum handle_type_t {
     PROCON = 3
 };
 
+handle_type_t  handle_priority;
 handle_type_t  handle_type;
 
 bool enable_button_test;

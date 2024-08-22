@@ -359,6 +359,11 @@ public ref class FormJoy : public System::Windows::Forms::Form
     private: System::Windows::Forms::Label^  lbl_mainStickHelp;
     private: System::Windows::Forms::NumericUpDown^  numeric_StickParamRangeRatio2;
     private: System::Windows::Forms::NumericUpDown^  numeric_StickParamDeadzone2;
+    private: System::Windows::Forms::ToolStripDropDownButton^ dropDown_controllerPrioritySelection;
+    private: System::Windows::Forms::ToolStripMenuItem^ anyToolStripMenuItem;
+    private: System::Windows::Forms::ToolStripMenuItem^ joyConLToolStripMenuItem;
+    private: System::Windows::Forms::ToolStripMenuItem^ joyConRToolStripMenuItem;
+    private: System::Windows::Forms::ToolStripMenuItem^ proControllerToolStripMenuItem;
     public:  System::Windows::Forms::TextBox^  txtBox_NFCTag;
 
     private: System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(images::typeid));
@@ -581,6 +586,11 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->numeric_StickParamRangeRatio = (gcnew System::Windows::Forms::NumericUpDown());
             this->lbl_deadzone = (gcnew System::Windows::Forms::Label());
             this->numeric_StickParamDeadzone = (gcnew System::Windows::Forms::NumericUpDown());
+            this->dropDown_controllerPrioritySelection = (gcnew System::Windows::Forms::ToolStripDropDownButton());
+            this->proControllerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->joyConRToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->joyConLToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->anyToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
             this->grpBox_Color->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBoxPreview))->BeginInit();
             this->grpBox_SPI->SuspendLayout();
@@ -2359,9 +2369,9 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->toolStrip1->Dock = System::Windows::Forms::DockStyle::Bottom;
             this->toolStrip1->GripMargin = System::Windows::Forms::Padding(0);
             this->toolStrip1->GripStyle = System::Windows::Forms::ToolStripGripStyle::Hidden;
-            this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
+            this->toolStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {
                 this->toolStripBtn_batt,
-                    this->toolStripLabel_batt, this->toolStripLabel_temp, this->toolStripBtn_refresh, this->toolStripBtn_Disconnect
+                    this->toolStripLabel_batt, this->toolStripLabel_temp, this->toolStripBtn_refresh, this->toolStripBtn_Disconnect, this->dropDown_controllerPrioritySelection
             });
             this->toolStrip1->Location = System::Drawing::Point(0, 1065);
             this->toolStrip1->Name = L"toolStrip1";
@@ -2429,8 +2439,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->toolStripBtn_refresh->Padding = System::Windows::Forms::Padding(4, 0, 4, 0);
             this->toolStripBtn_refresh->Size = System::Drawing::Size(64, 21);
             this->toolStripBtn_refresh->Text = L"Refresh";
-            this->toolStripBtn_refresh->ToolTipText = L"Refresh connected controller info.\r\n\r\nIf you connected a new controller and disco"
-                L"nnected the old one,\r\nit will show the new controller.";
+            this->toolStripBtn_refresh->ToolTipText = L"Refresh connected controller info.";
             this->toolStripBtn_refresh->Click += gcnew System::EventHandler(this, &FormJoy::toolStripBtn_refresh_Click);
             // 
             // toolStripBtn_Disconnect
@@ -2740,7 +2749,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->chkBox_IRDimLeds->RightToLeft = System::Windows::Forms::RightToLeft::No;
             this->chkBox_IRDimLeds->Size = System::Drawing::Size(195, 21);
             this->chkBox_IRDimLeds->TabIndex = 27;
-            this->chkBox_IRDimLeds->Text = L"Near/Wide  (130�)  Leds 3/4";
+            this->chkBox_IRDimLeds->Text = L"Near/Wide  (130°)  Leds 3/4";
             // 
             // chkBox_IRBrightLeds
             // 
@@ -2756,7 +2765,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->chkBox_IRBrightLeds->RightToLeft = System::Windows::Forms::RightToLeft::No;
             this->chkBox_IRBrightLeds->Size = System::Drawing::Size(195, 21);
             this->chkBox_IRBrightLeds->TabIndex = 26;
-            this->chkBox_IRBrightLeds->Text = L"Far/Narrow   (75�)  Leds 1/2";
+            this->chkBox_IRBrightLeds->Text = L"Far/Narrow   (75°)  Leds 1/2";
             // 
             // grpBox_IRRes
             // 
@@ -3917,6 +3926,45 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->numeric_StickParamDeadzone->TabIndex = 57;
             this->numeric_StickParamDeadzone->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
             this->numeric_StickParamDeadzone->UpDownAlign = System::Windows::Forms::LeftRightAlignment::Left;
+            // 
+            // dropDown_controllerPrioritySelection
+            // 
+            this->dropDown_controllerPrioritySelection->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+            this->dropDown_controllerPrioritySelection->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
+                this->anyToolStripMenuItem,
+                    this->joyConLToolStripMenuItem, this->joyConRToolStripMenuItem, this->proControllerToolStripMenuItem
+            });
+            this->dropDown_controllerPrioritySelection->Name = L"dropDown_controllerPrioritySelection";
+            this->dropDown_controllerPrioritySelection->Size = System::Drawing::Size(73, 19);
+            this->dropDown_controllerPrioritySelection->Text = L"Any";
+            // 
+            // proControllerToolStripMenuItem
+            // 
+            this->proControllerToolStripMenuItem->Name = L"proControllerToolStripMenuItem";
+            this->proControllerToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+            this->proControllerToolStripMenuItem->Text = L"Pro Controller";
+            this->proControllerToolStripMenuItem->Click += gcnew System::EventHandler(this, &FormJoy::proControllerToolStripMenuItem_Click);
+            // 
+            // joyConRToolStripMenuItem
+            // 
+            this->joyConRToolStripMenuItem->Name = L"joyConRToolStripMenuItem";
+            this->joyConRToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+            this->joyConRToolStripMenuItem->Text = L"Joy-Con (R)";
+            this->joyConRToolStripMenuItem->Click += gcnew System::EventHandler(this, &FormJoy::joyConRToolStripMenuItem_Click);
+            // 
+            // joyConLToolStripMenuItem
+            // 
+            this->joyConLToolStripMenuItem->Name = L"joyConLToolStripMenuItem";
+            this->joyConLToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+            this->joyConLToolStripMenuItem->Text = L"Joy-Con (L)";
+            this->joyConLToolStripMenuItem->Click += gcnew System::EventHandler(this, &FormJoy::joyConLToolStripMenuItem_Click);
+            // 
+            // anyToolStripMenuItem
+            // 
+            this->anyToolStripMenuItem->Name = L"anyToolStripMenuItem";
+            this->anyToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+            this->anyToolStripMenuItem->Text = L"Any";
+            this->anyToolStripMenuItem->Click += gcnew System::EventHandler(this, &FormJoy::anyToolStripMenuItem_Click);
             // 
             // FormJoy
             // 
@@ -6136,9 +6184,9 @@ public ref class FormJoy : public System::Windows::Forms::Form
 
         // Enable IR Leds. Only the following configurations are supported.
         if (this->chkBox_IRBrightLeds->Checked == true && this->chkBox_IRDimLeds->Checked == true)
-            ir_new_config.ir_leds = 0b000000; // Both Far/Narrow 75� and Near/Wide 130� Led groups are enabled.
+            ir_new_config.ir_leds = 0b000000; // Both Far/Narrow 75\u00B0 and Near/Wide 130\u00B0 Led groups are enabled.
         else if (this->chkBox_IRBrightLeds->Checked == true && this->chkBox_IRDimLeds->Checked == false)
-            ir_new_config.ir_leds = 0b100000; // Only Far/Narrow 75� Led group is enabled.
+            ir_new_config.ir_leds = 0b100000; // Only Far/Narrow 75\u00B0 Led group is enabled.
         else if (this->chkBox_IRBrightLeds->Checked == false && this->chkBox_IRDimLeds->Checked == true)
             ir_new_config.ir_leds = 0b010000; // Only Near/Wide 130� Led group is enabled.
         else if (this->chkBox_IRBrightLeds->Checked == false && this->chkBox_IRDimLeds->Checked == false)
@@ -6639,13 +6687,30 @@ public ref class FormJoy : public System::Windows::Forms::Form
 
     private: System::Boolean check_if_connected() {
         if (!device_connection()) {
-            MessageBox::Show(L"The device was disconnected!\n\n" +
-                L"Press a button on the controller to re-connect\nand try again!",
-                L"CTCaer's Joy-Con Toolkit - Connection Error!", MessageBoxButtons::OK, MessageBoxIcon::Stop);
+            this->iRCameraToolStripMenuItem->Enabled = false;
+            this->grpBox_nfc->Enabled = false;
+
+            this->textBoxSN->Text = L"Disconnected";
+            this->textBoxFW->Text = L"0.00";
+            this->textBoxMAC->Text = L"00:00:00:00:00:00";
+            this->textBoxDev->Text = L"None";
+            this->lbl_Buttons_hex_txt->Text = L"";
+            this->lbl_Body_hex_txt->Text = L"";
+
+            this->toolStripBtn_batt->ToolTipText = "";
+
+            if (temp_celsius)
+                this->toolStripLabel_temp->Text = String::Format(L"{0:f1}\u2103 ", 0);
+            else
+                this->toolStripLabel_temp->Text = String::Format(L"{0:f1}\u2109 ", 0);
+            this->grpBox_Color->Enabled = false;
+            this->pictureBoxPreview->Image = nullptr;
             return true;
         }
-        else
+        else {
+            this->grpBox_Color->Enabled = true;
             return false;
+        }
     }
 
 
@@ -6693,6 +6758,26 @@ public ref class FormJoy : public System::Windows::Forms::Form
             }
         }
         this->txtBox_NFCTag->Text = ntag_temp_string;
+    }
+    private: System::Void proControllerToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+        this->dropDown_controllerPrioritySelection->Text = "Pro controller";
+        handle_priority = PROCON;
+        full_refresh(true);
+    }
+    private: System::Void joyConRToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+        this->dropDown_controllerPrioritySelection->Text = "Joy-Con (R)";
+        handle_priority = JOYCON_R;
+        full_refresh(true);
+    }
+    private: System::Void joyConLToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+        this->dropDown_controllerPrioritySelection->Text = "Joy-Con (L)";
+        handle_priority = JOYCON_L;
+        full_refresh(true);
+    }
+    private: System::Void anyToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+        this->dropDown_controllerPrioritySelection->Text = "Any";
+        handle_priority = JOYCON_R;
+        full_refresh(true);
     }
 };
 }

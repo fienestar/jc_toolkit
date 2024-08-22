@@ -2914,25 +2914,28 @@ int test_chamber() {
 
 int device_connection(){
     if (check_connection_ok) {
-        handle_type = 0;
-        // Joy-Con (L)
-        if (handle = hid_open(0x57e, 0x2006, nullptr)) {
-            handle_type = 1;
-            return handle_type;
+        handle_type = NOTHING;
+
+        constexpr int vendor_id = 0x57e;
+        constexpr int product_ids[] = { 0, 0x2006, 0x2007, 0x2009 };
+        if (handle_priority != NOTHING) {
+            handle = hid_open(vendor_id, product_ids[handle_priority], nullptr);
+            if (handle) {
+                handle_type = handle_priority;
+                return handle_type;
+            }
+            else {
+                return NOTHING;
+            }
         }
-        // Joy-Con (R)
-        if (handle = hid_open(0x57e, 0x2007, nullptr)) {
-            handle_type = 2;
-            return handle_type;
-        }
-        // Pro Controller
-        if (handle = hid_open(0x57e, 0x2009, nullptr)) {
-            handle_type = 3;
-            return handle_type;
-        }
-        // Nothing found
         else {
-            return 0;
+            for (const handle_type_t type : { JOYCON_L, JOYCON_R, PROCON }) {
+                if (handle = hid_open(vendor_id, product_ids[type], nullptr)) {
+                    handle_type = type;
+                    return handle_type;
+                }
+            }
+            return NOTHING;
         }
     }
     /*
