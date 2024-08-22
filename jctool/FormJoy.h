@@ -4014,7 +4014,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->Name = L"FormJoy";
             this->SizeGripStyle = System::Windows::Forms::SizeGripStyle::Hide;
             this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-            this->Text = L"Joy-Con Toolkit v5.2.0";
+            this->Text = L"Joy-Con Toolkit v5.3.0";
             this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &FormJoy::Form1_FormClosing);
             this->SizeChanged += gcnew System::EventHandler(this, &FormJoy::fixToolstripOverlap);
             this->grpBox_Color->ResumeLayout(false);
