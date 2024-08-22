@@ -2740,7 +2740,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->chkBox_IRDimLeds->RightToLeft = System::Windows::Forms::RightToLeft::No;
             this->chkBox_IRDimLeds->Size = System::Drawing::Size(195, 21);
             this->chkBox_IRDimLeds->TabIndex = 27;
-            this->chkBox_IRDimLeds->Text = L"Near/Wide  (130°)  Leds 3/4";
+            this->chkBox_IRDimLeds->Text = L"Near/Wide  (130ï¿½)  Leds 3/4";
             // 
             // chkBox_IRBrightLeds
             // 
@@ -2756,7 +2756,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->chkBox_IRBrightLeds->RightToLeft = System::Windows::Forms::RightToLeft::No;
             this->chkBox_IRBrightLeds->Size = System::Drawing::Size(195, 21);
             this->chkBox_IRBrightLeds->TabIndex = 26;
-            this->chkBox_IRBrightLeds->Text = L"Far/Narrow   (75°)  Leds 1/2";
+            this->chkBox_IRBrightLeds->Text = L"Far/Narrow   (75ï¿½)  Leds 1/2";
             // 
             // grpBox_IRRes
             // 
@@ -4080,7 +4080,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
         this->btn_runBtnTest->Text = L"Turn on";
         enable_button_test = false;
 
-        if (handle_ok != 3) {
+        if (handle_type != PROCON) {
             this->textBoxSN->Text = gcnew String(get_sn(0x6001, 0xF).c_str());
             this->textBox_chg_sn->Text = this->textBoxSN->Text;
 
@@ -4093,8 +4093,8 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->btn_changeGripsColor->Enabled = true;
         }
 
-        if (handle_ok != 1) {
-            if (handle_ok == 2)
+        if (handle_type != JOYCON_L) {
+            if (handle_type == JOYCON_R)
                 this->iRCameraToolStripMenuItem->Enabled = true;  // JC (R)
             else
                 this->iRCameraToolStripMenuItem->Enabled = false; // Pro con
@@ -4114,11 +4114,11 @@ public ref class FormJoy : public System::Windows::Forms::Form
         this->textBoxMAC->Text = String::Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}",
             device_info[4], device_info[5], device_info[6], device_info[7], device_info[8], device_info[9]);
 
-        if (handle_ok == 1)
+        if (handle_type == JOYCON_L)
             this->textBoxDev->Text = L"Joy-Con (L)";
-        else if (handle_ok == 2)
+        else if (handle_type == JOYCON_R)
             this->textBoxDev->Text = L"Joy-Con (R)";
-        else if (handle_ok == 3)
+        else if (handle_type == PROCON)
             this->textBoxDev->Text = L"Pro Controller";
 
         update_battery();
@@ -4155,7 +4155,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
             newColors[10] = (u8)jcGripRightColor.G;
             newColors[11] = (u8)jcGripRightColor.B;
 
-            if (handle_ok != 3)
+            if (handle_type != PROCON)
                 error = write_spi_data(0x6050, 6, newColors);
             else
                 error = write_spi_data(0x6050, 12, newColors);
@@ -4191,11 +4191,11 @@ public ref class FormJoy : public System::Windows::Forms::Form
         get_device_info(device_info);
 
         String^ filename = L"spi_";
-        if (handle_ok == 1)
+        if (handle_type == JOYCON_L)
             filename += "left_";
-        else if (handle_ok == 2)
+        else if (handle_type == JOYCON_R)
             filename += "right_";
-        else if (handle_ok == 3)
+        else if (handle_type == PROCON)
             filename += "pro_";
 
         filename += String::Format("{0:X2}{1:X2}{2:X2}{3:X2}{4:X2}{5:X2}",
@@ -4250,14 +4250,14 @@ public ref class FormJoy : public System::Windows::Forms::Form
         Bitmap^ MyImageLayer2;
 
         // Apply body color 
-        switch (handle_ok) {
-            case 1:
+        switch (handle_type) {
+            case JOYCON_L:
                 MyImage = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_l_joy_body")));
                 break;
-            case 2:
+            case JOYCON_R:
                 MyImage = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_r_joy_body")));
                 break;
-            case 3:
+            case PROCON:
                 MyImage = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_pro_body")));
                 MyImageLayer = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_pro_grips_l")));
                 MyImageLayer2 = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_pro_grips_r")));
@@ -4283,7 +4283,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
         delete bmd;
 
         // Apply grips color
-        if (handle_ok == 3) {
+        if (handle_type == PROCON) {
             // Skip slow SetPixel(). Reduce latency pixel set latency from 842us -> 260ns.
             bmd = MyImageLayer->LockBits(System::Drawing::Rectangle(0, 0, MyImageLayer->Width, MyImageLayer->Height), System::Drawing::Imaging::ImageLockMode::ReadOnly, MyImageLayer->PixelFormat);
             System::Drawing::Imaging::BitmapData^ bmd2 = MyImageLayer2->LockBits(System::Drawing::Rectangle(0, 0, MyImageLayer2->Width, MyImageLayer2->Height), System::Drawing::Imaging::ImageLockMode::ReadOnly, MyImageLayer2->PixelFormat);
@@ -4349,14 +4349,14 @@ public ref class FormJoy : public System::Windows::Forms::Form
         }
 
         // Apply buttons color 
-        switch (handle_ok) {
-            case 1:
+        switch (handle_type) {
+            case JOYCON_L:
                 MyImageLayer = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_l_joy_buttons")));
                 break;
-            case 2:
+            case JOYCON_R:
                 MyImageLayer = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_r_joy_buttons")));
                 break;
-            case 3:
+            case PROCON:
                 MyImage = drawLayeredImage(MyImage, MyImageLayer); // Apply grips layer
                 MyImageLayer = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_pro_buttons")));
                 break;
@@ -4379,14 +4379,14 @@ public ref class FormJoy : public System::Windows::Forms::Form
         MyImage = drawLayeredImage(MyImage, MyImageLayer);
 
         // Apply outlines
-        switch (handle_ok) {
-            case 1:
+        switch (handle_type) {
+            case JOYCON_L:
                 MyImageLayer = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_l_joy_lines")));
                 break;
-            case 2:
+            case JOYCON_R:
                 MyImageLayer = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_r_joy_lines")));
                 break;
-            case 3:
+            case PROCON:
                 MyImageLayer = (cli::safe_cast<System::Drawing::Bitmap^>(resources->GetObject(L"base64_pro_lines")));
                 break;
             default:
@@ -4829,7 +4829,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
         //Bootloader, device type, FW DS1, FW DS2
         array<byte>^ validation_magic = { 
             0x01, 0x08, 0x00, 0xF0, 0x00, 0x00, 0x62, 0x08, 0xC0, 0x5D, 0x89, 0xFD, 0x04, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x40, 0x06,
-            (u8)handle_ok, 0xA0,
+            (u8)handle_type, 0xA0,
             0x0A, 0xFB, 0x00, 0x00, 0x02, 0x0D,
             0xAA, 0x55, 0xF0, 0x0F, 0x68, 0xE5, 0x97, 0xD2 };
         Stream^ fileStream;
@@ -4863,11 +4863,11 @@ public ref class FormJoy : public System::Windows::Forms::Form
                 return;
             }
 
-            if (handle_ok == 1)
+            if (handle_type == JOYCON_L)
                 str_dev_type = L"Joy-Con (L)";
-            else if (handle_ok == 2)
+            else if (handle_type == JOYCON_R)
                 str_dev_type = L"Joy-Con (R)";
-            else if (handle_ok == 3)
+            else if (handle_type == PROCON)
                 str_dev_type = L"Pro controller";
 
             if (this->backup_spi[0x6012] == 1)
@@ -5026,16 +5026,16 @@ public ref class FormJoy : public System::Windows::Forms::Form
             this->lbl_rstDesc->Text =
                 L"This lets you restore the chosen user calibrations from your SPI backup.";
             this->grpBox_RstUser->Visible = true;
-            if (handle_ok == 1) {
+            if (handle_type == JOYCON_L) {
                 this->checkBox_rst_R_StickCal->Visible  = false;
                 this->checkBox_rst_L_StickCal->Visible  = true;
                 this->checkBox_rst_L_StickCal->Location = this->checkBox_rst_R_StickCal->Location;
             }
-            else if (handle_ok == 2) {
+            else if (handle_type == JOYCON_R) {
                 this->checkBox_rst_R_StickCal->Visible = true;
                 this->checkBox_rst_L_StickCal->Visible = false;
             }
-            else if (handle_ok == 3) {
+            else if (handle_type == PROCON) {
                 this->checkBox_rst_R_StickCal->Visible = true;
                 this->checkBox_rst_L_StickCal->Visible = true;
             }
@@ -5047,16 +5047,16 @@ public ref class FormJoy : public System::Windows::Forms::Form
                 L"This option does the same factory reset with the option inside Switch's controller calibration menu.";
             this->btn_restore->Text = L"Reset";
             this->grpBox_RstUser->Visible = true;
-            if (handle_ok == 1) {
+            if (handle_type == JOYCON_L) {
                 this->checkBox_rst_R_StickCal->Visible  = false;
                 this->checkBox_rst_L_StickCal->Visible  = true;
                 this->checkBox_rst_L_StickCal->Location = this->checkBox_rst_R_StickCal->Location;
             }
-            else if (handle_ok == 2) {
+            else if (handle_type == JOYCON_R) {
                 this->checkBox_rst_R_StickCal->Visible = true;
                 this->checkBox_rst_L_StickCal->Visible = false;
             }
-            else if (handle_ok == 3) {
+            else if (handle_type == PROCON) {
                 this->checkBox_rst_R_StickCal->Visible = true;
                 this->checkBox_rst_L_StickCal->Visible = true;
             }
@@ -5115,7 +5115,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
                 send_rumble();
                 if (error == 0) {
                     String^ new_sn;
-                    if (handle_ok != 3) {
+                    if (handle_type != 3) {
                         new_sn = gcnew String(get_sn(0x6001, 0xF).c_str());
                         MessageBox::Show(L"The serial number was restored and changed to \"" + new_sn + L"\"!",
                             L"Restore Finished!", MessageBoxButtons::OK, MessageBoxIcon::Asterisk);
@@ -5148,10 +5148,10 @@ public ref class FormJoy : public System::Windows::Forms::Form
                     sensor[i] = this->backup_spi[0x8026 + i];
                 }
 
-                if (handle_ok != 2 && this->checkBox_rst_L_StickCal->Checked == true)
+                if (handle_type != 2 && this->checkBox_rst_L_StickCal->Checked == true)
                     error = write_spi_data(0x8010, 0xB, l_stick);
                 Sleep(100);
-                if (handle_ok != 1 && this->checkBox_rst_R_StickCal->Checked == true && error == 0)
+                if (handle_type != 1 && this->checkBox_rst_R_StickCal->Checked == true && error == 0)
                     error = write_spi_data(0x801B, 0xB, r_stick);
                 Sleep(100);
                 if (this->checkBox_rst_accGyroCal->Checked == true && error == 0)
@@ -5176,10 +5176,10 @@ public ref class FormJoy : public System::Windows::Forms::Form
                 unsigned char sensor[0x1A];
                 memset(sensor, 0xFF, 0x1A);
 
-                if (handle_ok != 2 && this->checkBox_rst_L_StickCal->Checked == true)
+                if (handle_type != 2 && this->checkBox_rst_L_StickCal->Checked == true)
                     error = write_spi_data(0x8010, 0xB, l_stick);
                 Sleep(100);
-                if (handle_ok != 1 && this->checkBox_rst_R_StickCal->Checked == true && error == 0)
+                if (handle_type != 1 && this->checkBox_rst_R_StickCal->Checked == true && error == 0)
                     error = write_spi_data(0x801B, 0xB, r_stick);
                 Sleep(100);
                 if (this->checkBox_rst_accGyroCal->Checked == true && error == 0)
@@ -5443,7 +5443,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
         if (check_if_connected())
             return;
 
-        if (handle_ok != 3) {
+        if (handle_type != 3) {
             if (MessageBox::Show(L"This will change your Serial Number!\n\nMake a backup first!\n\n" +
                 L"Are you sure you want to continue?", L"Warning!",
                 MessageBoxButtons::YesNo, MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::Yes)
@@ -5508,7 +5508,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
         if (check_if_connected())
             return;
 
-        if (handle_ok != 3) {
+        if (handle_type != 3) {
             if (MessageBox::Show(L"Do you really want to restore it from the S/N backup inside your controller\'s SPI?\n\nYou can also choose to restore it from a SPI backup you previously made, through the main Restore option.",
                 L"Warning!", MessageBoxButtons::YesNo, MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::Yes) {
                 int sn_ok = 1;
@@ -6098,7 +6098,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
         this->lbl_IRStatus->Text = "Status: Configuring";
         Application::DoEvents();
 
-        // The IR camera lens has a FoV of 123°. The IR filter is a NIR 850nm wavelength pass filter.
+        // The IR camera lens has a FoV of 123ï¿½. The IR filter is a NIR 850nm wavelength pass filter.
 
         // Resolution config register and no of packets expected
         // The sensor supports a max of Binning [4 x 2] and max Skipping [4 x 4]
@@ -6136,11 +6136,11 @@ public ref class FormJoy : public System::Windows::Forms::Form
 
         // Enable IR Leds. Only the following configurations are supported.
         if (this->chkBox_IRBrightLeds->Checked == true && this->chkBox_IRDimLeds->Checked == true)
-            ir_new_config.ir_leds = 0b000000; // Both Far/Narrow 75° and Near/Wide 130° Led groups are enabled.
+            ir_new_config.ir_leds = 0b000000; // Both Far/Narrow 75ï¿½ and Near/Wide 130ï¿½ Led groups are enabled.
         else if (this->chkBox_IRBrightLeds->Checked == true && this->chkBox_IRDimLeds->Checked == false)
-            ir_new_config.ir_leds = 0b100000; // Only Far/Narrow 75° Led group is enabled.
+            ir_new_config.ir_leds = 0b100000; // Only Far/Narrow 75ï¿½ Led group is enabled.
         else if (this->chkBox_IRBrightLeds->Checked == false && this->chkBox_IRDimLeds->Checked == true)
-            ir_new_config.ir_leds = 0b010000; // Only Near/Wide 130° Led group is enabled.
+            ir_new_config.ir_leds = 0b010000; // Only Near/Wide 130ï¿½ Led group is enabled.
         else if (this->chkBox_IRBrightLeds->Checked == false && this->chkBox_IRDimLeds->Checked == false)
             ir_new_config.ir_leds = 0b110000; // Both groups disabled
 
@@ -6418,13 +6418,13 @@ public ref class FormJoy : public System::Windows::Forms::Form
         get_spi_data(0x8026, sizeof(user_sensor_cal), user_sensor_cal);
         Sleep(100);
         get_spi_data(0x6089, sizeof(stick_model_main_left), stick_model_main_left);
-        if (handle_ok == 3) {
+        if (handle_type == PROCON) {
             Sleep(100);
             get_spi_data(0x609B, sizeof(stick_model_pro_right), stick_model_pro_right);
         }
 
         // Left stick user cal
-        if (handle_ok != 2) {
+        if (handle_type != 2) {
             if (*(u16*)&user_stick_cal[0] == 0xA1B2) {
                 // Center X,Y
                 decode_stick_params(decoded_stick_pair + 2, user_stick_cal + 5);
@@ -6451,7 +6451,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
         else
             grpBox_leftStickUCal->Enabled = false;
         // Right stick user cal
-        if (handle_ok != 1) {
+        if (handle_type != 1) {
             if (*(u16*)&user_stick_cal[0xB] == 0xA1B2) {
                 // Center X,Y
                 decode_stick_params(decoded_stick_pair + 8, user_stick_cal + 13);
@@ -6501,7 +6501,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
         this->numeric_StickParamDeadzone2->Enabled   = false;
         this->numeric_StickParamRangeRatio2->Enabled = false;
         this->lbl_proStickHelp->Enabled              = false;
-        if (handle_ok == 3) {
+        if (handle_type == PROCON) {
             decode_stick_params(decoded_stick_pair + 14, stick_model_pro_right);
             this->numeric_StickParamDeadzone2->Value   = decoded_stick_pair[14];
             this->numeric_StickParamRangeRatio2->Value = decoded_stick_pair[15];
@@ -6530,7 +6530,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
             memset(user_sensor_cal,    0, sizeof(user_sensor_cal));
             memset(decoded_stick_pair, 0, sizeof(decoded_stick_pair));
 
-            if (handle_ok != 2 && this->checkBox_enableLeftUserCal->Checked) {
+            if (handle_type != 2 && this->checkBox_enableLeftUserCal->Checked) {
                 *(u16*)&user_stick_cal[0] = 0xA1B2;
                 // Center X,Y
                 decoded_stick_pair[0] = (u16)this->numeric_leftUserCal_x_center->Value;
@@ -6549,7 +6549,7 @@ public ref class FormJoy : public System::Windows::Forms::Form
                 // Erase left stick user cal
                 memset(user_stick_cal, 0xFF, 11);
             }
-            if (handle_ok != 1 && this->checkBox_enableRightUserCal->Checked) {
+            if (handle_type != 1 && this->checkBox_enableRightUserCal->Checked) {
                 *(u16*)&user_stick_cal[11] = 0xA1B2;
                 // Center X,Y
                 decoded_stick_pair[0] = (u16)this->numeric_rightUserCal_x_center->Value;
@@ -6618,14 +6618,14 @@ public ref class FormJoy : public System::Windows::Forms::Form
             encode_stick_params(stick_model_main_left, decoded_stick_pair);
 
             // Pro's Right Stick
-            if (handle_ok == 3) {
+            if (handle_type == PROCON) {
                 decoded_stick_pair[2] = (u16)this->numeric_StickParamDeadzone2->Value;
                 decoded_stick_pair[3] = (u16)this->numeric_StickParamRangeRatio2->Value;
                 encode_stick_params(stick_model_pro_right, decoded_stick_pair + 2);
             }
 
             int res = write_spi_data(0x6089, sizeof(stick_model_main_left), stick_model_main_left);
-            if (res == 0 && handle_ok == 3) {
+            if (res == 0 && handle_type == PROCON) {
                 Sleep(100);
                 res = write_spi_data(0x609B, sizeof(stick_model_pro_right), stick_model_pro_right);
             }
